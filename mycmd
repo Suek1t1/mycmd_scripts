@@ -1,0 +1,30 @@
+#!/bin/zsh
+
+CMD_DIR="$HOME/mycmd_scripts"       # サブコマンドが保存されているディレクトリのパス
+
+
+# サブコマンドが指定されていない場合のエラー文
+if [[ -z "$1" ]]; then
+  echo "使い方: mycmd <サブコマンド> [引数...]"
+  echo "利用可能なサブコマンド: mydir_for , cntf"
+  exit 1
+fi
+
+sub_command=$1      # 1番目の引数(サブコマンド名)
+shift               # shiftコマンドで1番目の引数を削除 (残りの引数をサブコマンドに渡すため)
+
+# サブコマンド
+case $sub_command in
+  "mkdir_for")                                          # ファイルを連番で作成するコマンド
+    exec "$CMD_DIR/mkdir_for" "$@"
+    ;;
+
+  "cntf")                                               # フォルダ内のファイルの個数を数えるコマンド
+    exec "$CMD_DIR/cntf" "$@"
+    ;;
+
+  *)
+    echo "エラー: '$sub_command' は不明なサブコマンドです。"  # エラー時の表示
+    exit 1
+    ;;
+esac

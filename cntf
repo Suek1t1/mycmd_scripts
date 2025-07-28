@@ -1,0 +1,25 @@
+#!/bin/zsh
+# フォルダ内のファイルの個数を数えるコマンド
+
+# 位置パラメータ
+TARGET_DIR=$1
+
+# エラー時の表示（ディレクトリが存在しない場合もチェック）
+if [[ -z "$TARGET_DIR" ]] || [[ ! -d "$TARGET_DIR" ]]; then
+  echo "🚨エラー: 有効なディレクトリパスを指定してください。"
+  echo "使い方: mycmd cntf <ディレクトリパス>"
+  exit 1
+fi
+
+# ファイル数とフォルダ数を数える
+files=($TARGET_DIR/*(N.))
+dirs=($TARGET_DIR/*(N/))
+
+file_count=${#files[@]}
+dir_count=${#dirs[@]}
+sum_count=$((file_count + dir_count))
+
+# 結果表示
+echo "フォルダ数: ${dir_count}"
+echo "ファイル数 : ${file_count}"
+echo "$1には合計で ${sum_count} 個のファイル、フォルダがあります。"
