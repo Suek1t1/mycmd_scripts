@@ -17,9 +17,8 @@ case "$1" in
     ;;
 
   off)                                                          # ファイル共有サービスを停止
-    echo "NASを停止します。"
     sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.smbd.plist
-    echo "停止しました。"
+    echo "nasを停止しました。"
     ;;
 
   state)                                                        # サービスが動作中か確認

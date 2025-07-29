@@ -2,8 +2,8 @@
 # 指定したセット数ポモドーロタイマーが作動する。(25分+5分ワンセット)(通知機能あり)
 
 # 時間設定
-WORK_MIN=1  # 集中時間（分）
-BREAK_MIN=1 # 休憩時間（分）
+WORK_MIN=25     # 集中時間（分）
+BREAK_MIN=5     # 休憩時間（分）
 
 # 引数からセット数を取得、なければ1セットに設定
 if [[ -n "$1" ]] && [[ "$1" =~ ^[0-9]+$ ]]; then
@@ -18,8 +18,7 @@ BREAK_SEC=$((BREAK_MIN * 60))
 
 # 通知を送るための関数
 function notify() {
-  # $1: タイトル, $2: メッセージ
-  osascript -e "display notification \"$2\" with title \"$1\" sound name \"Glass\""
+  terminal-notifier -title "$1" -message "$2" -sound "Glass"      # $1: タイトル, $2: メッセージ
 }
 
 # カウントダウンを表示する関数
@@ -40,7 +39,7 @@ notify "ポモドーロ" "タイマーを開始します"
 
 for i in $(seq 1 $TOTAL_SETS); do
   echo "\n--- 集中タイム ($WORK_MIN分) [セット ${i}/${TOTAL_SETS}] ---"
-  notify "集中タイム開始" "セット ${i} を始めよう！"
+  notify "集中タイム開始" "セット ${i} を始めましょう。"
   countdown $WORK_SEC
 
   if (( i < TOTAL_SETS )); then                             # 最後のセットの後は休憩が入らないためスキップを入れる
@@ -50,5 +49,5 @@ for i in $(seq 1 $TOTAL_SETS); do
   fi
 done
 
-echo "\n全てのセットが完了しました！お疲れ様でした！"
-notify "ポモドーロ完了" "全てのセットが完了しました！"
+echo "\n全てのセットが完了しました。"
+notify "ポモドーロ完了" "全てのセットが完了しました。"
