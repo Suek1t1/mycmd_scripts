@@ -27,6 +27,10 @@ case $sub_command in
     exec "$CMD_DIR/nas" "$@"
     ;;
 
+  "pomodoro")                                           # 指定したセット数ポモドーロタイマーが作動する。(25分+5分ワンセット)(通知機能あり)
+    exec "$CMD_DIR/pomodoro" "$@"
+    ;;
+
   *)
     echo "エラー: '$sub_command' は不明なサブコマンドです。"  # エラー時の表示
     exit 1

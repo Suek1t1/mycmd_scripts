@@ -1,0 +1,54 @@
+#!/bin/zsh
+# 指定したセット数ポモドーロタイマーが作動する。(25分+5分ワンセット)(通知機能あり)
+
+# 時間設定
+WORK_MIN=1  # 集中時間（分）
+BREAK_MIN=1 # 休憩時間（分）
+
+# 引数からセット数を取得、なければ1セットに設定
+if [[ -n "$1" ]] && [[ "$1" =~ ^[0-9]+$ ]]; then
+  TOTAL_SETS=$1
+else
+  TOTAL_SETS=1
+fi
+
+# 秒数に変換
+WORK_SEC=$((WORK_MIN * 60))
+BREAK_SEC=$((BREAK_MIN * 60))
+
+# 通知を送るための関数
+function notify() {
+  # $1: タイトル, $2: メッセージ
+  osascript -e "display notification \"$2\" with title \"$1\" sound name \"Glass\""
+}
+
+# カウントダウンを表示する関数
+function countdown() {
+  local total_seconds=$1
+  while (( total_seconds > 0 )); do
+    # 分と秒を整形して表示。「\r」でカーソルを行頭に戻す
+    printf "残り %02d:%02d\r" $((total_seconds / 60)) $((total_seconds % 60))
+    sleep 1
+    ((total_seconds--))
+  done
+  echo "          " # 表示をクリア
+}
+
+# メイン処理
+echo "ポモドーロタイマーを開始します。（合計 ${TOTAL_SETS} セット）"
+notify "ポモドーロ" "タイマーを開始します"
+
+for i in $(seq 1 $TOTAL_SETS); do
+  echo "\n--- 集中タイム ($WORK_MIN分) [セット ${i}/${TOTAL_SETS}] ---"
+  notify "集中タイム開始" "セット ${i} を始めよう！"
+  countdown $WORK_SEC
+
+  if (( i < TOTAL_SETS )); then                             # 最後のセットの後は休憩が入らないためスキップを入れる
+    echo "\n--- 休憩タイム ($BREAK_MIN分) ---"
+    notify "休憩タイム" "お疲れ様でした！少し休みましょう。"
+    countdown $BREAK_SEC
+  fi
+done
+
+echo "\n全てのセットが完了しました！お疲れ様でした！"
+notify "ポモドーロ完了" "全てのセットが完了しました！"
