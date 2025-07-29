@@ -23,6 +23,10 @@ case $sub_command in
     exec "$CMD_DIR/cntf" "$@"
     ;;
 
+  "nas")                                                # 使用しているPCをNAS化するコマンド
+    exec "$CMD_DIR/nas" "$@"
+    ;;
+
   *)
     echo "エラー: '$sub_command' は不明なサブコマンドです。"  # エラー時の表示
     exit 1
