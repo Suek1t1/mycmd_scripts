@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-CMD_DIR="$HOME/mycmd_scripts"       # サブコマンドが保存されているディレクトリのパス
+export CMD_DIR="$HOME/mycmd_scripts"       # サブコマンドが保存されているディレクトリのパス
 
 
 # サブコマンドが指定されていない場合のエラー文
@@ -31,6 +31,9 @@ case $sub_command in
     exec "$CMD_DIR/pomodoro" "$@"
     ;;
 
+  "qrgen")                                              # 指定したURLのQRコードを生成する
+    exec "$CMD_DIR/qrgen" "$@"
+    ;;
   *)
     echo "エラー: '$sub_command' は不明なサブコマンドです。"  # エラー時の表示
     exit 1

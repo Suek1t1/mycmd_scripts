@@ -1,0 +1,4 @@
+#!/bin/zsh
+# 指定したURLのQRコードを生成する
+
+python3 "$CMD_DIR/qrgen.py" "$@"
