@@ -14,11 +14,15 @@ fi
 dirname=$1          # フォルダ名
 first=$2            # 最初のフォルダの番号
 last=$3             # 最後のフォルダの番号
+interval=${4:-1}    # 間隔
 
 # forループでフォルダを作成
-for ((i=first; i<=last; i++)); do
-  mkdir -p "${dirname}${i}"  # フォルダ名にスペースなどが含まれる可能性も考慮し、変数は""で囲むとより安全らしい
+count=0
+for ((i=first; i<=last; i+=interval)); do
+  mkdir -p "${dirname}${i}"
+  echo "${dirname}${i}フォルダを作成しました。"
+  ((count++))
 done
 
 # 結果表示
-echo "完了: ${dirname}${first} から ${dirname}${last} まで、計$((last-first+1))個のフォルダを作成しました。"
+echo "完了: ${dirname}${first} から ${dirname}${last} まで、計${count}個のフォルダを作成しました。"

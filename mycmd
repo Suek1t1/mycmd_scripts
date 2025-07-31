@@ -6,7 +6,7 @@ export CMD_DIR="$HOME/mycmd_scripts"       # サブコマンドが保存され�
 # サブコマンドが指定されていない場合のエラー文
 if [[ -z "$1" ]]; then
   echo "使い方: mycmd <サブコマンド> [引数...]"
-  echo "利用可能なサブコマンド: mydir_for , cntf"
+  echo "利用可能なサブコマンド: mydir_for , cntf , pomodoro , nas , qrgen , forcus , ren_for , sharef"
   exit 1
 fi
 
@@ -34,8 +34,27 @@ case $sub_command in
   "qrgen")                                              # 指定したURLのQRコードを生成する
     exec "$CMD_DIR/qrgen" "$@"
     ;;
-  *)
+
+  "sharef")                                             # 指定したファイルを共有するためのURLを作成する。
+    exec "$CMD_DIR/sharef" "$@"
+    ;;
+
+  "pyhttp")                                             # カレントディレクトリをWebサーバーにする
+  
+    exec "$CMD_DIR/pyhttp" "$@"
+    ;;
+
+  "ren_for")                                            # 指定した名前の連番ファイルの名前を変更する
+    exec "$CMD_DIR/ren_for" "$@"
+    ;;
+    
+  "forcus")                                             # 指定したファイルへのアクセスをブロックする
+    exec "$CMD_DIR/forcus" "$@"
+    ;;
+
+  *)                                                    # エラー時の表示
     echo "エラー: '$sub_command' は不明なサブコマンドです。"  # エラー時の表示
     exit 1
     ;;
 esac
+

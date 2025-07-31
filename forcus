@@ -1,0 +1,64 @@
+#!/bin/zsh
+# 指定したファイルへのアクセスをブロックする
+
+# ブロックしたいサイトのリスト
+# ここのリストを編集すれば、対象サイトを変更できます
+SITES_TO_BLOCK=(
+  "twitter.com"
+  "www.twitter.com"
+  "x.com"
+  "www.x.com"
+  "youtube.com"
+  "www.youtube.com"
+  "instagram.com"
+  "www.instagram.com"
+  "facebook.com"
+  "www.facebook.com"
+)
+
+
+# hostsファイルのパス
+HOSTS_FILE="/etc/hosts"
+
+# 集中モードを開始する関数
+function focus_on() {
+  # すでに追加済みかチェック
+  if grep -q "#focus-block" "$HOSTS_FILE"; then
+    echo "既に集中モードが有効です。"
+    exit 0
+  fi
+
+  echo "集中モードを開始します。"
+  # hostsファイルにサイト情報を追記
+  for site in "${SITES_TO_BLOCK[@]}"; do
+    # teeコマンドとsudoを組み合わせて追記する
+    echo "127.0.0.1 ${site} #focus-block" | sudo tee -a "$HOSTS_FILE" > /dev/null
+  done
+
+  echo "サイトブロックが有効になりました。ブラウザの再起動が必要な場合があります。"
+}
+
+# 集中モードを終了する関数
+function focus_off() {
+  echo "集中モードを終了します。"
+
+  # #focus-blockという目印が付いた行だけを削除する
+  # sedコマンドでファイルを直接編集（元ファイルは.bakとしてバックアップ）
+  sudo sed -i.bak '/#focus-block/d' "$HOSTS_FILE"
+
+  echo "サイトブロックを解除しました。"
+}
+
+
+# --- メイン処理 ---
+case "$1" in
+  on)
+    focus_on
+    ;;
+  off)
+    focus_off
+    ;;
+  *)
+    echo "使い方: mycmd focus [on|off]"
+    ;;
+esac

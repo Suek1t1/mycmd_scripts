@@ -1,0 +1,36 @@
+#!/bin/zsh
+# 指定した名前の連番ファイルの名前を変更する
+
+# 引数が4つ未満の場合は使い方を表示して終了
+if [[ $# -lt 4 ]]; then
+  echo "エラー: 引数が足りません。"
+  echo "使い方: mycmd ren_for <旧プレフィックス> <新プレフィックス> <開始番号> <終了番号>"
+  echo "実行例: mycmd ren_for old_ report_ 1 10"
+  exit 1
+fi
+
+# 引数を変数に格納
+OLD_PREFIX=$1
+NEW_PREFIX=$2
+START_NUM=$3
+END_NUM=$4
+
+echo "リネーム処理を開始します..."
+
+# 開始番号から終了番号までループ
+for (( i=START_NUM; i<=END_NUM; i++ )); do
+  OLD_NAME="${OLD_PREFIX}${i}"
+  NEW_NAME="${NEW_PREFIX}${i}"
+
+  # 古い名前のディレクトリが存在するか確認
+  if [[ -d "$OLD_NAME" ]]; then
+    # 存在すればmvコマンドでリネーム
+    mv "$OLD_NAME" "$NEW_NAME"
+    echo "'${OLD_NAME}' -> '${NEW_NAME}' にリネームしました。"
+  else
+    # 存在しなければスキップ
+    echo "'${OLD_NAME}' は存在しないため、スキップしました。"
+  fi
+done
+
+echo "\n処理が完了しました。"

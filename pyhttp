@@ -1,0 +1,4 @@
+#!/bin/zsh
+# カレントディレクトリをWebサーバーにする
+
+python3 "$CMD_DIR/pyhttp.py" "$@"

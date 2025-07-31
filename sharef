@@ -1,0 +1,37 @@
+#!/bin/zsh
+
+# 共有したいファイルのパスを引数から取得
+FILE_PATH=$1
+
+# 引数が指定されていない、またはファイルが存在しない場合はエラー
+if [[ -z "$FILE_PATH" ]] || [[ ! -f "$FILE_PATH" ]]; then
+  echo "🚨エラー: 共有したいファイルのパスを正しく指定してください。"
+  echo "使い方: mycmd sharef ./myfile.txt"
+  exit 1
+fi
+
+echo "🚀 ファイルをアップロード中..."
+
+# サービス「file.io」にファイルをアップロード
+# -F "file=@..." はファイルを指定するcurlの書式
+RESPONSE=$(curl -F "file=@$FILE_PATH" https://file.io)
+
+# curlコマンドが成功したか（終了コードが0か）をチェック
+if [ $? -ne 0 ]; then
+  echo "❌エラー: ファイルのアップロードに失敗しました。ネットワーク接続を確認してください。"
+  exit 1
+fi
+
+# jqコマンドで、サーバーからのJSON応答の中から.linkの値（URL）だけを抽出
+DOWNLOAD_URL=$(echo "$RESPONSE" | jq -r .link)
+
+# URLが正しく取得できたか確認
+if [[ "$DOWNLOAD_URL" == "null" ]] || [[ -z "$DOWNLOAD_URL" ]]; then
+  echo "❌エラー: URLの取得に失敗しました。サーバーが混み合っている可能性があります。"
+  echo "サーバーからの応答: $RESPONSE"
+  exit 1
+else
+  echo "\n✅ アップロードが完了しました！"
+  echo "以下のURLを共有してください（1日後に自動削除されます）："
+  echo "$DOWNLOAD_URL"
+fi
