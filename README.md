@@ -10,8 +10,10 @@ Zshで日々の定型作業を効率化するための自作コマンド集で�
 | `cntf`     | mycmd cntf ~/                  | count file         | 指定したディレクトリ内のファイルとフォルダの数をそれぞれ表示。                |
 | `pomodoro` | mycmd pomodoro 3               | Pomodoro Technique | 指定したセット数ポモドーロタイマーが作動する。(25分+5分ワンセット)(通知機能あり)|
 | `qrgen`    | mycmd qrgen https://google.com | QR generator       | 指定したURLのQRコードを生成する                                          |
-| `forcus`   | mycmd forcus on                | forcus             | 指定されているサイトへのアクセスを禁止する。サイトの指定はコードに記述。       |
+| `forcus`   | mycmd forcus on                | forcus             | 指定されているサイトへのアクセスを禁止する。サイトの指定はコードに記述。         |
 | `crop`     | mycmd crop ~/test1 ~/test2 500 5000| crop           | 指定したフォルダ内の画像ファイルをクロップし別フォルダに保存する               |
+| `chimg`    | mycmd chimg png jpg ~/test     | change img         | 指定したフォルダ内にあるファイルの拡張子を変更。(macのみ)                    |
+| `trash`    | mycmd trash ~/test             | trash              | 指定したフォルダ内のファイル、または指定したファイルをゴミ箱に捨てる。(macのみ)  |
 ### 未実装のコマンド
 | コマンド | 使用例                             | 意味                | 機能                                                                 |
 | :--------- | :----------------------------- | :----------------- | :------------------------------------------------------------------ |

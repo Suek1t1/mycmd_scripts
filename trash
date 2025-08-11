@@ -1,0 +1,28 @@
+#!/bin/zsh
+
+# 引数が一つも指定されていない場合は使い方を表示して終了
+if [[ $# -eq 0 ]]; then
+  echo "エラー: ゴミ箱へ移動したいファイルまたはフォルダを指定してください。"
+  echo "使い方: mycmd trash <file1> <file2> ..."
+  echo "実行例: mycmd trash temp.txt ./old_folder"
+  exit 1
+fi
+
+# 引数で渡された全てのファイル/フォルダに対してループ処理
+for item in "$@"; do
+  # 指定されたファイルやフォルダが存在するか確認
+  if [[ -e "$item" ]]; then
+    # Zshの機能(:A)で、相対パスを絶対パスに変換する
+    full_path=$item:A
+
+    # osascriptでFinderに「ゴミ箱へ移動」を命令する
+    osascript -e "tell application \"Finder\" to move POSIX file \"${full_path}\" to trash"
+    
+    echo "'${item}' をゴミ箱へ移動しました。"
+  else
+    # 存在しない場合はエラーメッセージを表示
+    echo "エラー: '${item}' は存在しません。"
+  fi
+done
+
+echo "\n処理が完了しました。"

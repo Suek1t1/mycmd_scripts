@@ -1,0 +1,67 @@
+#!/bin/zsh
+
+# --- 引数の解釈 ---
+if [[ $# -eq 3 ]]; then
+  TARGET_DIR=$1
+  FROM_EXT=$2
+  TO_EXT=$3
+elif [[ $# -eq 2 ]]; then
+  TARGET_DIR="."
+  FROM_EXT=$1
+  TO_EXT=$2
+else
+  echo "エラー : 引数の数が正しくありません。"
+  echo "使い方1: mycmd chimg <対象ディレクトリ> <元拡張子> <先拡張子>"
+  echo "使い方2: mycmd chimg <元拡張子> <先拡張子> (カレントディレクトリが対象)"
+  exit 1
+fi
+
+# --- 事前チェック ---
+# trashコマンドの存在確認
+if ! command -v trash &> /dev/null; then
+    echo "エラー: 'trash'コマンドが見つかりません。 'brew install trash' などでインストールしてください。" >&2
+    exit 1
+fi
+# 安全対策
+if [[ "$FROM_EXT" == "$TO_EXT" ]]; then
+  echo "エラー: 変換元と変換先の拡張子が同じです。"
+  exit 1
+fi
+# ディレクトリ存在確認
+if [[ ! -d "$TARGET_DIR" ]]; then
+  echo "エラー: 指定されたディレクトリ「$TARGET_DIR」は存在しません。"
+  exit 1
+fi
+# ファイル存在確認
+files=(${TARGET_DIR}/*.$FROM_EXT(N))
+if [[ ${#files[@]} -eq 0 ]]; then
+  echo "変換対象の *.$FROM_EXT ファイルが「$TARGET_DIR」内に見つかりませんでした。"
+  exit 0
+fi
+
+# --- メイン処理 ---
+echo "画像フォーマットを変換し、元ファイルをゴミ箱へ移動します。"
+
+for file in ${files[@]}; do
+  base_path=${file%.*}
+  new_file="${base_path}.${TO_EXT}"
+
+  echo "\n処理中: ${file}"
+
+  # sipsコマンドでフォーマット変換を実行
+  sips -s format "$TO_EXT" "$file" --out "$new_file" > /dev/null
+
+  # sipsコマンドが成功したか（終了コードが0か）をチェック
+  if [ $? -eq 0 ]; then
+    # 成功した場合
+    echo "変換成功: ${new_file}"
+    echo "元ファイル「$(basename "$file")」をゴミ箱へ移動します。"
+    trash "$file"
+  else
+    # 失敗した場合
+    echo "変換失敗: ${file}"
+    echo "元ファイルはそのまま残します。"
+  fi
+done
+
+echo "\n 全ての処理が完了しました。"

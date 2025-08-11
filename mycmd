@@ -55,6 +55,14 @@ case $sub_command in
   "crop")                                               # 指定したフォルダ内の画像を切り取る(クロップする)
     exec "$CMD_DIR/crop_center" "$@"
     ;;
+
+  "chimg")                                               # 指定したフォルダ内の画像の拡張子を変更する(macのみ)
+    exec "$CMD_DIR/chimg" "$@"
+    ;;
+
+  "trash")                                               # 指定したファイル、フォルダをゴミ箱に捨てる(macのみ)
+    exec "$CMD_DIR/trash" "$@"
+    ;;
     
   *)                                                    # エラー時の表示
     echo "エラー: '$sub_command' は不明なサブコマンドです。"  # エラー時の表示
