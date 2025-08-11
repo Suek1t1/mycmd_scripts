@@ -52,6 +52,10 @@ case $sub_command in
     exec "$CMD_DIR/forcus" "$@"
     ;;
 
+  "crop")                                               # 指定したフォルダ内の画像を切り取る(クロップする)
+    exec "$CMD_DIR/crop_center" "$@"
+    ;;
+    
   *)                                                    # エラー時の表示
     echo "エラー: '$sub_command' は不明なサブコマンドです。"  # エラー時の表示
     exit 1

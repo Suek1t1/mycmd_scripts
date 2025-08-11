@@ -1,0 +1,2 @@
+#!/bin/zsh
+python3 "$CMD_DIR/crop_center.py" "$@"
